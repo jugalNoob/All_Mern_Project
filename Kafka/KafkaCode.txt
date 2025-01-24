@@ -1,0 +1,174 @@
+https://kafka.js.org/docs/getting-started ----- <><><><><<><><>
+const { Kafka } = require('kafkajs')
+
+const kafka = new Kafka({
+  clientId: 'my-app',
+  brokers: ['kafka1:9092', 'kafka2:9092'],
+})
+console.log(kafka)
+
+const producer = kafka.producer()
+
+await producer.connect()
+await producer.send({
+  topic: 'test-topic',
+  messages: [
+    { value: 'Hello KafkaJS user!' },
+  ],
+})
+
+await producer.disconnect()
+
+
+
+const consumer = kafka.consumer({ groupId: 'test-group' })
+
+await consumer.connect()
+await consumer.subscribe({ topic: 'test-topic', fromBeginning: true })
+
+await consumer.run({
+  eachMessage: async ({ topic, partition, message }) => {
+    console.log({
+      value: message.value.toString(),
+    })
+  },
+})
+
+
+
+:::::::::::::: producer code  -------------------------------- < <>< <>< <>< <><><<>
+
+// await producer.send({
+//     topic: <String>,
+//     messages: <Message[]>,
+//     acks: <Number>,
+//     timeout: <Number>,
+//     compression: <CompressionTypes>,
+// })
+
+
+// const producer = kafka.producer()
+
+// console.log(producer)
+
+// const one=async()=>{
+//     await producer.connect()
+//     await producer.send({
+//       topic: 'test-topic',
+//       messages: [
+//         { value: 'Hello KafkaJS user!' },
+//       ],
+//     })
+// }
+
+
+
+const producer = kafka.producer()
+
+await producer.connect()
+await producer.send({
+    topic: 'topic-name',
+    messages: [
+        { key: 'key1', value: 'hello world', partition: 0 },
+        { key: 'key2', value: 'hey hey!', partition: 1 }
+    ],
+})
+
+const producer = kafka.producer()
+
+await producer.connect()
+await producer.send({
+    topic: 'topic-name',
+    messages: [
+        { key: 'key1', value: 'hello world' },
+        { key: 'key2', value: 'hey hey!' }
+    ],
+})
+
+
+const topicMessages = [
+  {
+    topic: 'topic-a',
+    messages: [{ key: 'key', value: 'hello topic-a' }],
+  },
+  {
+    topic: 'topic-b',
+    messages: [{ key: 'key', value: 'hello topic-b' }],
+  },
+  {
+    topic: 'topic-c',
+    messages: [
+      {
+        key: 'key',
+        value: 'hello topic-c',
+        headers: {
+          'correlation-id': '2bfb68bb-893a-423b-a7fa-7b568cad5b67',
+        },
+      }
+    ],
+  }
+]
+await producer.sendBatch({ topicMessages })
+
+
+
+await producer.send({
+    topic: 'topic-name',
+    messages: [{
+        key: 'key1',
+        value: 'hello world',
+        headers: {
+            'correlation-id': '2bfb68bb-893a-423b-a7fa-7b568cad5b67',
+            'system-id': 'my-system',
+        }
+    }]
+})
+
+
+
+
+Compression ----------------<><><<>< 
+npm install --save kafkajs-snappy
+
+const { CompressionTypes } = require('kafkajs')
+
+async () => {
+  await producer.send({
+    topic: 'topic-name',
+    compression: CompressionTypes.GZIP,
+    messages: [
+        { key: 'key1', value: 'hello world' },
+        { key: 'key2', value: 'hey hey!' }
+    ],
+  })
+
+const { CompressionTypes, CompressionCodecs } = require('kafkajs')
+const ZstdCodec = require('@kafkajs/zstd')
+
+CompressionCodecs[CompressionTypes.ZSTD] = ZstdCodec()
+
+
+await producer.send({
+    topic: 'topic-name',
+    compression: CompressionTypes.Snappy,
+    messages: [
+        { key: 'key1', value: 'hello world' },
+        { key: 'key2', value: 'hey hey!' }
+    ],
+})
+
+
+::::::::::::::::::::::: Consuming Messages --------------<><><><><>
+
+const consumer = kafka.consumer({ groupId: 'test-group' })
+
+await consumer.connect()
+await consumer.subscribe({ topic: 'test-topic', fromBeginning: true })
+
+await consumer.run({
+  eachMessage: async ({ topic, partition, message }) => {
+    console.log({
+      value: message.value.toString(),
+    })
+  },
+})

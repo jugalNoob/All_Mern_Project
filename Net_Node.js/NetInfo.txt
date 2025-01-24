@@ -1,0 +1,12 @@
+The net module in Node.js is a core library that provides an asynchronous API for creating stream-based TCP and IPC (Inter-Process Communication) servers and clients. Here are some key features and functionalities of the net module:
+
+Key Features
+TCP Servers and Clients: You can create TCP servers using net.createServer() and clients using net.createConnection(). This allows for real-time communication between clients and servers.
+
+Stream Interface: The net module implements the Stream interface, making it easy to read from and write to sockets. You can handle data as streams of information, which is efficient for networking tasks.
+
+Event Handling: The module supports events like data, end, error, and timeout, allowing developers to handle incoming data and connection status effectively.
+
+IPC Support: The net module also supports IPC through Unix domain sockets and Windows named pipes, enabling communication between different processes on the same machine.
+
+Blocking Rules: With the BlockList class, you can define rules to block access to specific IP addresses or ranges, enhancing security for your application.
